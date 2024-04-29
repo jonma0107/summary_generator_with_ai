@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+    container_name: ai_blog_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/backend
+      - ./media:/backend/media      
+    env_file:
+      - .env
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             python manage.py makemigrations --noinput &&
+             python manage.py migrate &&
+             gunicorn ai_blog.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120 --worker-class gevent --log-level debug"    
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: ai_blog_db
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env  # Cargar variables desde .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -q -d $DB_NAME -U $DB_USER"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data:
+  # staticfiles:  # Volumen para archivos estáticos

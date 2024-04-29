@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summary Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown-light.min.css">
+    
+    <style>
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+         
+        .load {
+            width: 100px;
+            height: 100px;
+            margin: 110px auto 0;
+            border: solid 10px #8822aa;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            animation: rotate 1s linear infinite;
+        }
+
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen bg-gray-100 font-sans antialiased">
+    <!-- Navbar -->
+    <nav class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-4 text-white flex justify-between">
+        <div>
+            <h1 class="text-3xl font-bold">AI Summary Generator</h1>
+        </div>
+        <div>
+            <a href="#" class="text-white hover:underline mx-4">Welcome {{ user.username }}</a>
+            <a href="/blog-list" class="text-white hover:underline mx-4">Saved Summary</a>
+            <a href="/" class="text-white hover:underline">Logout</a>
+        </div>
+    </nav>
+
+    <br><br>
+
+    <!-- Main -->
+    <div class="flex-grow container mx-auto mt-10 px-4 sm:px-0">
+        <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 flex flex-col">
+            <!-- Introduction section -->
+            <div class="text-center">
+                <h2 class="text-2xl font-semibold mb-4">Welcome to the AI Summary Generator</h2>
+                <p class="text-gray-700">
+                    Generate concise, high-quality summaries from YouTube videos using artificial intelligence.
+                    Simply enter the link to the YouTube video below and let the AI create the content for you!
+                </p>
+            </div>
+
+            <br>
+
+            <!-- Youtube section -->
+            <div>
+                <h2 class="text-xl mb-4 font-semibold">Enter Youtube Video Link</h2>
+                <div class="flex space-x-4">
+                    <input id="youtubeLink" type="url" placeholder="Paste Youtube Link..." class="flex-grow p-2 border border-purple-400 rounded-l-md">
+                    <button id="generateBlogButton" class="bg-purple-600 text-white px-4 py-2 rounded-r-md hover:bg-purple-700 transition-colors">Generate</button>
+                </div>
+            </div>
+
+            <!-- Loading circle -->
+            <div id="loading-circle" class="load" style="display: none;"></div>
+
+            <!-- Generated Blog Display Section -->
+            <section class="mt-10 flex-grow">
+                <h2 class="text-xl mb-4 font-semibold">Generated Summary</h2>
+                <div id="blogContent" class="markdown-body mt-2 text-gray-700 space-y-4"></div>
+            </section>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 text-black mt-6">
+        Powered by <a href="jonathanmeza.com.co">Jonathan Meza</a>
+    </footer>
+
+    <script>
+        document.getElementById('generateBlogButton').addEventListener('click', async () => {
+            const youtubeLink = document.getElementById('youtubeLink').value;
+            const blogContent = document.getElementById('blogContent');
+        
+            if (youtubeLink) {
+                document.getElementById('loading-circle').style.display = 'block';
+                blogContent.innerHTML = ''; // Limpiar contenido previo
+        
+                const endpointUrl = '/generate-blog';
+        
+                try {
+                    const response = await fetch(endpointUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ link: youtubeLink })
+                    });
+        
+                    const data = await response.json();
+        
+                    // Verificar si la tabla está bien generada en Markdown antes de convertirla
+                    console.log("Markdown recibido:", data.content);
+        
+                    // Convertir el Markdown a HTML y mostrarlo correctamente
+                    blogContent.innerHTML = `<div class="markdown-body">${marked.parse(data.content)}</div>`;
+        
+                } catch (error) {
+                    console.error("Error occurred:", error);
+                    alert("Something went wrong. Please try again later.");
+                }
+        
+                document.getElementById('loading-circle').style.display = 'none';
+            } else {
+                alert("Please enter a YouTube link.");
+            }
+        });
+        
+    </script>
+</body>
+</html>

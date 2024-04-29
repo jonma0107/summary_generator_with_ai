@@ -1,0 +1,27 @@
+{
+
+  "version": "2.0.0",
+  "tasks": [
+          
+      {
+        "label": "runserver",
+        "type": "shell",
+        "command": "./ai_blog_env/bin/python3 ./manage.py runserver",
+        "problemMatcher": []
+      },
+      {
+        "label": "stopserver",
+        "type": "shell",
+        "command": "bash",
+        "args": ["-c", "pkill -f 'python3 manage.py runserver'"],
+        "problemMatcher": []
+      },
+      {
+        "label": "shell",
+        "type": "shell",
+        "command": "./ai_blog_env/bin/python3 ./manage.py shell",
+        "problemMatcher": []
+      },      
+    
+  ]
+}
