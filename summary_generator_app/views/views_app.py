@@ -36,10 +36,19 @@ def index(request):
   username = request.user
   return render(request, 'index.html', {'username': username})
 
-
 def error_page(request):
   return render(request, 'error_page.html')
 
+def delete_audio_file(filepath):
+    """ Delete the audio file if it exists. """
+    try:
+        if os.path.exists(filepath):
+            os.remove(filepath)
+            print(f"File deleted: {filepath}")
+        else:
+            print(f"File not found: {filepath}")
+    except Exception as e:
+        print(f"Error when deleting file: {e}")
 
 @csrf_exempt
 def generate_summary(request):
@@ -52,15 +61,20 @@ def generate_summary(request):
 
         # get yt title
         title = yt_title(yt_link)
-
+        # get audio_file
+        audio_file = download_audio(yt_link)
         # get transcript
         transcription = get_transcription(yt_link)
+
         if not transcription:
+            delete_audio_file(audio_file)
             return JsonResponse({'error': " Failed to get transcript"}, status=500)
 
         # use OpenAI to generate the summary
         summary_content = generate_summary_from_transcription(transcription)
+
         if not summary_content:
+            delete_audio_file(audio_file)
             return JsonResponse({'error': " Failed to generate summary article"}, status=500)
 
         # save summary article to database
@@ -71,7 +85,7 @@ def generate_summary(request):
             generated_content=summary_content,
         )
         new_summary_article.save()
-
+        delete_audio_file(audio_file)
         # return summary article as a response
         return JsonResponse({'content': summary_content})
     else:
@@ -127,7 +141,6 @@ def generate_summary_from_transcription(transcription):
         {"role": "system", "content": "You are a concise summary writer."},
         {"role": "user", "content": f"From the content of the generated transcript, make a summary in Spanish.\n\nTranscripción:\n{transcription}"}
     ]
-
     
     try:
         # Make a request to the model
