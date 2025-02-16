@@ -34,4 +34,4 @@ COPY . /backend
 EXPOSE 8000
 
 # Comando para ejecutar migraciones, recolectar archivos estáticos y luego iniciar el servidor
-CMD ["sh", "-c", "python manage.py collectstatic --noinput && python manage.py makemigrations --noinput && python manage.py migrate && gunicorn ai_blog.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120 --worker-class gevent --log-level debug"]
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && python manage.py makemigrations --noinput && python manage.py migrate && gunicorn ai_summary.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120 --worker-class gevent --log-level debug"]
