@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class BlogGeneratorAppConfig(AppConfig):
+class summaryGeneratorAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'blog_generator_app'
+    name = 'summary_generator_app'

@@ -9,5 +9,5 @@ urlpatterns = [
     path('signup/', views_auth.user_signup, name='signup'),
     path('logout/', views_auth.user_logout, name='logout'),
     path('error_page/', views_app.error_page, name='error_page'),
-    path('generate-blog', views_app.generate_blog, name='generate-blog'),
+    path('generate-summary', views_app.generate_summary, name='generate-summary'),
 ]
