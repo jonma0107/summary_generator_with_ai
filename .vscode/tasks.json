@@ -4,24 +4,23 @@
   "tasks": [
           
       {
-        "label": "runserver",
+        "label": "up",
         "type": "shell",
-        "command": "./ai_blog_env/bin/python3 ./manage.py runserver",
+        "command": "docker-compose up -d",
         "problemMatcher": []
       },
       {
-        "label": "stopserver",
+        "label": "down",
         "type": "shell",
-        "command": "bash",
-        "args": ["-c", "pkill -f 'python3 manage.py runserver'"],
+        "command": "docker-compose down",
         "problemMatcher": []
       },
       {
-        "label": "shell",
+        "label": "build",
         "type": "shell",
-        "command": "./ai_blog_env/bin/python3 ./manage.py shell",
+        "command": "docker-compose build --no-cache",
         "problemMatcher": []
-      },      
+      }      
     
   ]
 }
