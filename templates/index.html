@@ -42,7 +42,7 @@
         </div>
         <div>
             <a href="#" class="text-white hover:underline mx-4">Welcome {{ user.username }}</a>
-            <a href="/blog-list" class="text-white hover:underline mx-4">Saved Summary</a>
+            <a href="/summary-list" class="text-white hover:underline mx-4">Saved Summary</a>
             <a href="/" class="text-white hover:underline">Logout</a>
         </div>
     </nav>
@@ -68,17 +68,17 @@
                 <h2 class="text-xl mb-4 font-semibold">Enter Youtube Video Link</h2>
                 <div class="flex space-x-4">
                     <input id="youtubeLink" type="url" placeholder="Paste Youtube Link..." class="flex-grow p-2 border border-purple-400 rounded-l-md">
-                    <button id="generateBlogButton" class="bg-purple-600 text-white px-4 py-2 rounded-r-md hover:bg-purple-700 transition-colors">Generate</button>
+                    <button id="generatesummaryButton" class="bg-purple-600 text-white px-4 py-2 rounded-r-md hover:bg-purple-700 transition-colors">Generate</button>
                 </div>
             </div>
 
             <!-- Loading circle -->
             <div id="loading-circle" class="load" style="display: none;"></div>
 
-            <!-- Generated Blog Display Section -->
+            <!-- Generated summary Display Section -->
             <section class="mt-10 flex-grow">
                 <h2 class="text-xl mb-4 font-semibold">Generated Summary</h2>
-                <div id="blogContent" class="markdown-body mt-2 text-gray-700 space-y-4"></div>
+                <div id="summaryContent" class="markdown-body mt-2 text-gray-700 space-y-4"></div>
             </section>
         </div>
     </div>
@@ -88,15 +88,15 @@
     </footer>
 
     <script>
-        document.getElementById('generateBlogButton').addEventListener('click', async () => {
+        document.getElementById('generatesummaryButton').addEventListener('click', async () => {
             const youtubeLink = document.getElementById('youtubeLink').value;
-            const blogContent = document.getElementById('blogContent');
+            const summaryContent = document.getElementById('summaryContent');
         
             if (youtubeLink) {
                 document.getElementById('loading-circle').style.display = 'block';
-                blogContent.innerHTML = ''; // Limpiar contenido previo
+                summaryContent.innerHTML = ''; // Limpiar contenido previo
         
-                const endpointUrl = '/generate-blog';
+                const endpointUrl = '/generate-summary';
         
                 try {
                     const response = await fetch(endpointUrl, {
@@ -111,7 +111,7 @@
                     console.log("Markdown recibido:", data.content);
         
                     // Convertir el Markdown a HTML y mostrarlo correctamente
-                    blogContent.innerHTML = `<div class="markdown-body">${marked.parse(data.content)}</div>`;
+                    summaryContent.innerHTML = `<div class="markdown-body">${marked.parse(data.content)}</div>`;
         
                 } catch (error) {
                     console.error("Error occurred:", error);
