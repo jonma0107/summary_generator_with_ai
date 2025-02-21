@@ -136,3 +136,6 @@ LOGIN_URL = 'login'
 
 # Clave primaria por defecto
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Celery variable
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')

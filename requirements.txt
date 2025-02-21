@@ -38,4 +38,5 @@ yt-dlp==2025.1.26
 gunicorn>=20.0.4
 gevent>=1.4.0
 whitenoise
+celery==5.4.0
 
