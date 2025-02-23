@@ -45,7 +45,7 @@ services:
   worker:
     build:
       context: .
-    container_name: ai_summary_backend
+    container_name: ai_summary_worker
     volumes:
       - .:/backend
       - ./media:/backend/media      
